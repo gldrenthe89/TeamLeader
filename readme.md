@@ -1,8 +1,5 @@
 # PHP TeamLeader API Laravel SDK
-[![Build Status](https://travis-ci.org/madeITBelgium/TeamLeader.svg?branch=master)](https://travis-ci.org/madeITBelgium/TeamLeader)
-[![Coverage Status](https://coveralls.io/repos/github/madeITBelgium/TeamLeader/badge.svg?branch=master)](https://coveralls.io/github/madeITBelgium/TeamLeader?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/madeITBelgium/TeamLeader/v/stable.svg)](https://packagist.org/packages/madeITBelgium/TeamLeader)
-[![Latest Unstable Version](https://poser.pugx.org/madeITBelgium/TeamLeader/v/unstable.svg)](https://packagist.org/packages/madeITBelgium/TeamLeader)
 [![Total Downloads](https://poser.pugx.org/madeITBelgium/TeamLeader/d/total.svg)](https://packagist.org/packages/madeITBelgium/TeamLeader)
 [![License](https://poser.pugx.org/madeITBelgium/TeamLeader/license.svg)](https://packagist.org/packages/madeITBelgium/TeamLeader)
 
@@ -17,7 +14,7 @@ composer require madeitbelgium/teamleader
 Or require this package in your `composer.json` and update composer.
 
 ```php
-"madeitbelgium/teamleader": "^1.0"
+"madeitbelgium/teamleader": "^1.8"
 ```
 
 ## Publish config file
@@ -49,6 +46,8 @@ $teamLeader = new TeamLeader($appUrl, $clientId, $clientSecret, $redirectUri, $c
 
 In laravel you can use the Facade
 ```php
+use MadeITBelgium\TeamLeader\Facade\TeamLeader;
+
 $teamLeaderContact = TeamLeader::crm()->contact()->add([
     'first_name' => 'Tjebbe',
     'last_name' => 'Lievens',
@@ -173,10 +172,41 @@ TeamLeader::invoicing()->invoices()->credit($id, $creditNoteDate)
 
 TeamLeader::invoicing()->taxRates()->list()
 
+TeamLeader::invoicing()->subscriptions()->list($data = [])
+TeamLeader::invoicing()->subscriptions()->info($id)
+TeamLeader::invoicing()->subscriptions()->create($data)
+TeamLeader::invoicing()->subscriptions()->update($id, $data)
+TeamLeader::invoicing()->subscriptions()->deactivate($id)
+
 TeamLeader::products()->product()->categoriesList($data = [])
 TeamLeader::products()->product()->list($data = [])
 TeamLeader::products()->product()->info($id)
 TeamLeader::products()->product()->add($data)
+
+TeamLeader::timeTracking()->list($data = [])
+TeamLeader::timeTracking()->info($id)
+TeamLeader::timeTracking()->add($data)
+TeamLeader::timeTracking()->update($id, $data)
+TeamLeader::timeTracking()->resume($id, $data)
+TeamLeader::timeTracking()->delete($id)
+
+TeamLeader::milestones()->list($data = [])
+TeamLeader::milestones()->info($id)
+TeamLeader::milestones()->add($data)
+TeamLeader::milestones()->update($id, $data)
+TeamLeader::milestones()->delete($id)
+TeamLeader::milestones()->close($id)
+TeamLeader::milestones()->open($id)
+
+TeamLeader::tasks()->list($data = [])
+TeamLeader::tasks()->info($id)
+TeamLeader::tasks()->add($data)
+TeamLeader::tasks()->update($id, $data)
+TeamLeader::tasks()->delete($id)
+TeamLeader::tasks()->complete($id)
+TeamLeader::tasks()->reopen($id)
+TeamLeader::tasks()->schedule($id)
+
 
 TeamLeader::webhooks()->list(); //https://developer.focus.teamleader.eu/#/reference/other/webhooks/webhooks.list
 TeamLeader::webhooks()->register($data); //https://developer.focus.teamleader.eu/#/reference/other/webhooks/webhooks.register

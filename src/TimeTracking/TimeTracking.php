@@ -1,17 +1,17 @@
 <?php
 
-namespace MadeITBelgium\TeamLeader\Product;
+namespace MadeITBelgium\TeamLeader\TimeTracking;
 
 /**
  * TeamLeader Laravel PHP SDK.
  *
- * @version    1.0.0
+ * @version    1.5.0
  *
  * @copyright  Copyright (c) 2018 Made I.T. (https://www.madeit.be)
  * @author     Tjebbe Lievens <tjebbe.lievens@madeit.be>
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-3.txt    LGPL
  */
-class Product
+class TimeTracking
 {
     private $teamleader;
 
@@ -41,64 +41,66 @@ class Product
     }
 
     /**
-     * Get a list of product categories.
-     */
-    public function categoriesList($data = [])
-    {
-        return $this->teamleader->getCall('productCategories.list', [
-            'body' => json_encode($data),
-        ]);
-    }
-
-    /**
-     * Get a list of products.
+     * Get a list of time tracking items.
      */
     public function list($data = [])
     {
-        return $this->teamleader->getCall('products.list', [
+        return $this->teamleader->getCall('timeTracking.list', [
             'body' => json_encode($data),
         ]);
     }
 
     /**
-     * Get details for a new product.
+     * Get details for a single timetracking item.
      */
     public function info($id)
     {
-        return $this->teamleader->getCall('products.info', [
-            'body' => json_encode(['id' => $id]),
-        ]);
+        return $this->teamleader->getCall('timeTracking.info?'.http_build_query(['id' => $id]));
     }
 
     /**
-     * Create a new product.
+     * Add a timetracking item.
      */
     public function add($data)
     {
-        return $this->teamleader->postCall('products.add', [
+        return $this->teamleader->postCall('timeTracking.add', [
             'body' => json_encode($data),
         ]);
     }
 
     /**
-     * Update a product.
+     * Update an timetracking item.
      */
     public function update($id, $data)
     {
         $data['id'] = $id;
 
-        return $this->teamleader->postCall('products.update', [
+        return $this->teamleader->postCall('timeTracking.update', [
             'body' => json_encode($data),
         ]);
     }
 
     /**
-     * Delete a product.
+     * Resume an timetracking item.
+     */
+    public function resume($id, $data)
+    {
+        $data['id'] = $id;
+
+        return $this->teamleader->postCall('timeTracking.resume', [
+            'body' => json_encode($data),
+        ]);
+    }
+
+    /**
+     * Delete an timetracking item.
      */
     public function delete($id)
     {
-        return $this->teamleader->postCall('products.delete', [
-            'body' => json_encode(['id' => $id]),
+        $data['id'] = $id;
+
+        return $this->teamleader->postCall('timeTracking.delete', [
+            'body' => json_encode($data),
         ]);
     }
 }

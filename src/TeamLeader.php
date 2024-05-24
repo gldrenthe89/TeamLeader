@@ -7,11 +7,16 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use MadeITBelgium\TeamLeader\Calendar\Calendar;
 use MadeITBelgium\TeamLeader\Crm\Crm;
 use MadeITBelgium\TeamLeader\Deals\Deal;
 use MadeITBelgium\TeamLeader\General\General;
 use MadeITBelgium\TeamLeader\Invoicing\Invoicing;
+use MadeITBelgium\TeamLeader\Milestones\Milestones;
 use MadeITBelgium\TeamLeader\Product\Product;
+use MadeITBelgium\TeamLeader\Projects\Projects;
+use MadeITBelgium\TeamLeader\Tasks\Tasks;
+use MadeITBelgium\TeamLeader\TimeTracking\TimeTracking;
 use MadeITBelgium\TeamLeader\Webhooks\Webhook;
 
 /**
@@ -25,7 +30,7 @@ use MadeITBelgium\TeamLeader\Webhooks\Webhook;
  */
 class TeamLeader
 {
-    protected $version = '1.5.0';
+    protected $version = '1.10.0';
     protected $apiVersion = '1.0';
     private $apiServer = 'https://api.focus.teamleader.eu';
     private $authServer = 'https://focus.teamleader.eu';
@@ -311,6 +316,7 @@ class TeamLeader
 
     public function calendar()
     {
+        return new Calendar($this);
     }
 
     public function invoicing()
@@ -325,10 +331,27 @@ class TeamLeader
 
     public function project()
     {
+        return new Projects($this);
+    }
+
+    public function projectV2()
+    {
+        throw new \Exception('Not implemented yet. Create pull request');
     }
 
     public function timeTracking()
     {
+        return new TimeTracking($this);
+    }
+
+    public function milestones()
+    {
+        return new Milestones($this);
+    }
+
+    public function tasks()
+    {
+        return new Tasks($this);
     }
 
     public function webhooks()
