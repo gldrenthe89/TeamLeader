@@ -7,6 +7,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use Log;
 use MadeITBelgium\TeamLeader\Calendar\Calendar;
 use MadeITBelgium\TeamLeader\Crm\Crm;
 use MadeITBelgium\TeamLeader\Deals\Deal;
@@ -16,6 +17,7 @@ use MadeITBelgium\TeamLeader\Milestones\Milestones;
 use MadeITBelgium\TeamLeader\Product\Product;
 use MadeITBelgium\TeamLeader\Projects\Projects;
 use MadeITBelgium\TeamLeader\Tasks\Tasks;
+use MadeITBelgium\TeamLeader\Ticket\Tickets;
 use MadeITBelgium\TeamLeader\TimeTracking\TimeTracking;
 use MadeITBelgium\TeamLeader\Webhooks\Webhook;
 
@@ -78,19 +80,14 @@ class TeamLeader
         ]);
     }
 
-    public function setClient($client)
-    {
-        $this->client = $client;
-    }
-
     public function getClient()
     {
         return $this->client;
     }
 
-    public function setAccessToken($accessToken)
+    public function setClient($client)
     {
-        $this->accessToken = $accessToken;
+        $this->client = $client;
     }
 
     public function getAccessToken()
@@ -98,9 +95,9 @@ class TeamLeader
         return $this->accessToken;
     }
 
-    public function setRefreshToken($refreshToken)
+    public function setAccessToken($accessToken)
     {
-        $this->refreshToken = $refreshToken;
+        $this->accessToken = $accessToken;
     }
 
     public function getRefreshToken()
@@ -108,9 +105,9 @@ class TeamLeader
         return $this->refreshToken;
     }
 
-    public function setExpiresAt($expiresAt)
+    public function setRefreshToken($refreshToken)
     {
-        $this->expiresAt = Carbon::parse($expiresAt);
+        $this->refreshToken = $refreshToken;
     }
 
     public function getExpiresAt()
@@ -118,9 +115,9 @@ class TeamLeader
         return $this->expiresAt;
     }
 
-    public function setClientId($clientId)
+    public function setExpiresAt($expiresAt)
     {
-        $this->clientId = $clientId;
+        $this->expiresAt = Carbon::parse($expiresAt);
     }
 
     public function getClientId()
@@ -128,14 +125,19 @@ class TeamLeader
         return $this->clientId;
     }
 
-    public function setClientSecret($clientSecret)
+    public function setClientId($clientId)
     {
-        $this->clientSecret = $clientSecret;
+        $this->clientId = $clientId;
     }
 
     public function getClientSecret()
     {
         return $this->clientSecret;
+    }
+
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
     }
 
     public function setRedirectUrl($redirectUri)
@@ -146,6 +148,11 @@ class TeamLeader
     public function getRedirectUrl($redirectUri)
     {
         return $this->redirectUri;
+    }
+
+    public function getCall($endPoint, $data = null)
+    {
+        return $this->call('GET', $endPoint, $data);
     }
 
     /**
@@ -179,7 +186,7 @@ class TeamLeader
         } catch (ServerException $e) {
             throw $e;
         } catch (ClientException $e) {
-            \Log::info($e->getResponse()->getBody());
+            Log::info($e->getResponse()->getBody());
 
             throw $e;
             if ($e->getCode() == 400) {
@@ -216,16 +223,6 @@ class TeamLeader
         }
 
         return $headers;
-    }
-
-    public function postCall($endPoint, $data)
-    {
-        return $this->call('POST', $endPoint, $data);
-    }
-
-    public function getCall($endPoint, $data = null)
-    {
-        return $this->call('GET', $endPoint, $data);
     }
 
     public function putCall($endPoint, $data)
@@ -270,6 +267,22 @@ class TeamLeader
         return $result;
     }
 
+    public function postCall($endPoint, $data)
+    {
+        return $this->call('POST', $endPoint, $data);
+    }
+
+    public function checkAndDoRefresh()
+    {
+        if (Carbon::now()->gt($this->expiresAt)) {
+            $result = $this->regenerateAccessToken();
+
+            return $result;
+        }
+
+        return false;
+    }
+
     public function regenerateAccessToken()
     {
         $result = $this->postCall('/oauth2/access_token', [
@@ -286,17 +299,6 @@ class TeamLeader
         $this->refreshToken = $result->refresh_token;
 
         return $result;
-    }
-
-    public function checkAndDoRefresh()
-    {
-        if (Carbon::now()->gt($this->expiresAt)) {
-            $result = $this->regenerateAccessToken();
-
-            return $result;
-        }
-
-        return false;
     }
 
     public function general()
@@ -336,7 +338,7 @@ class TeamLeader
 
     public function projectV2()
     {
-        throw new \Exception('Not implemented yet. Create pull request');
+        throw new Exception('Not implemented yet. Create pull request');
     }
 
     public function timeTracking()
@@ -352,6 +354,11 @@ class TeamLeader
     public function tasks()
     {
         return new Tasks($this);
+    }
+
+    public function tickets()
+    {
+        return new Tickets($this);
     }
 
     public function webhooks()
