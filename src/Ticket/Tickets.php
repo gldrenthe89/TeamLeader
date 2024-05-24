@@ -147,7 +147,7 @@ class Tickets
     /**
      * Get a list of ticket statuses.
      */
-    public function ticketStatuses($data)
+    public function ticketStatuses($data = [])
     {
         return $this->teamleader->postCall('ticketStatus.list', [
             'body' => json_encode($data),
