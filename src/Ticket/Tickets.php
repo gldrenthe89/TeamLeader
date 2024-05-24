@@ -45,7 +45,7 @@ class Tickets
      */
     public function list($data = [])
     {
-        return $this->teamleader->getCall('tickets.list', [
+        return $this->teamleader->postCall('tickets.list', [
             'body' => json_encode($data),
         ]);
     }
@@ -55,7 +55,7 @@ class Tickets
      */
     public function info($id)
     {
-        return $this->teamleader->getCall('tickets.info?'.http_build_query(['id' => $id]));
+        return $this->teamleader->postCall('tickets.info?'.http_build_query(['id' => $id]));
     }
 
     /**
