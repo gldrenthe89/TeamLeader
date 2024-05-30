@@ -11,6 +11,7 @@ use Log;
 use MadeITBelgium\TeamLeader\Calendar\Calendar;
 use MadeITBelgium\TeamLeader\Crm\Crm;
 use MadeITBelgium\TeamLeader\Deals\Deal;
+use MadeITBelgium\TeamLeader\File\Files;
 use MadeITBelgium\TeamLeader\General\General;
 use MadeITBelgium\TeamLeader\Invoicing\Invoicing;
 use MadeITBelgium\TeamLeader\Milestones\Milestones;
@@ -299,6 +300,11 @@ class TeamLeader
         $this->refreshToken = $result->refresh_token;
 
         return $result;
+    }
+
+    public function files()
+    {
+        return new Files($this);
     }
 
     public function general()
